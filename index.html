@@ -156,15 +156,15 @@
     ];
 
     const results = [
-      { title: "👀視覚×Type1｜整った空間で安心する人", advice: ["🧹 デスクや部屋の片づけ", "🌿 シンプルなインテリアに整える", "🌞 朝にカーテンを開けて光を入れる"] },
-      { title: "👀視覚×Type2｜美しいものに心がときめく人", advice: ["💐 季節の花を飾る", "🎨 美術館・雑貨屋に行く", "🖼 お気に入りのアートを見る"] },
-      { title: "👀視覚×Type3｜目標を見える化すると落ち着く人", advice: ["🗓 手帳に予定を整理", "🧾 目標ボードや付箋で可視化", "🔖 色分けで優先順位管理"] },
-      { title: "🎧聴覚×Type1｜静かな音で整う人", advice: ["🌊 自然音を流す", "☕️ 静かなカフェで過ごす", "🔇 耳栓で静かな時間"] },
-      { title: "🎧聴覚×Type2｜やさしい声に安心する人", advice: ["🎧 癒し系ポッドキャスト", "🗣 朗読や声優ボイス", "🫶 自分にやさしく語りかける"] },
-      { title: "🎧聴覚×Type3｜お気に入りの音楽で気分が変わる人", advice: ["🎵 プレイリストを作る", "🌅 朝に音楽を流す", "🚗 ドライブ中にBGM"] },
-      { title: "🤸‍♀️身体感覚×Type1｜体を整えると心も整う人", advice: ["🤸‍♂️ 朝のストレッチ", "🪑 姿勢を整える", "💆‍♀️ マッサージを受ける"] },
-      { title: "🤸‍♀️身体感覚×Type2｜ぬくもりにふれると安心する人", advice: ["🛌 湯たんぽやブランケット", "🤗 ハグや手をつなぐ", "☕️ あたたかい飲み物を包む"] },
-      { title: "🤸‍♀️身体感覚×Type3｜動くことでモヤモヤが消える人", advice: ["🚶‍♀️ ウォーキング", "🧹 掃除で動く", "🏋️‍♂️ 運動系YouTube"] }
+      { title: "👀視覚派｜整った空間で安心する人", advice: ["🧹 デスクや部屋の片づけ", "🌿 シンプルなインテリアに整える", "🌞 朝にカーテンを開けて光を入れる"] },
+      { title: "👀視覚派｜美しいものに心がときめく人", advice: ["💐 季節の花を飾る", "🎨 美術館・雑貨屋に行く", "🖼 お気に入りのアートを見る"] },
+      { title: "👀視覚派｜目標を見える化すると落ち着く人", advice: ["🗓 手帳に予定を整理", "🧾 目標ボードや付箋で可視化", "🔖 色分けで優先順位管理"] },
+      { title: "🎧聴覚派｜静かな音で整う人", advice: ["🌊 自然音を流す", "☕️ 静かなカフェで過ごす", "🔇 耳栓で静かな時間"] },
+      { title: "🎧聴覚派｜やさしい声に安心する人", advice: ["🎧 癒し系ポッドキャスト", "🗣 朗読や声優ボイス", "🫶 自分にやさしく語りかける"] },
+      { title: "🎧聴覚派｜お気に入りの音楽で気分が変わる人", advice: ["🎵 プレイリストを作る", "🌅 朝に音楽を流す", "🚗 ドライブ中にBGM"] },
+      { title: "🤸‍♀️身体感覚派｜体を整えると心も整う人", advice: ["🤸‍♂️ 朝のストレッチ", "🪑 姿勢を整える", "💆‍♀️ マッサージを受ける"] },
+      { title: "🤸‍♀️身体感覚派｜ぬくもりにふれると安心する人", advice: ["🛌 湯たんぽやブランケット", "🤗 ハグや手をつなぐ", "☕️ あたたかい飲み物を包む"] },
+      { title: "🤸‍♀️身体感覚派｜動くことでモヤモヤが消える人", advice: ["🚶‍♀️ ウォーキング", "🧹 掃除で動く", "🏋️‍♂️ 運動系YouTube"] }
     ];
 
     let currentQuestionIndex = 0;
@@ -185,7 +185,7 @@
         document.getElementById('quiz').style.display = 'none';
         document.getElementById('result').classList.add('show');
         document.getElementById('advice').classList.add('show');
-        document.getElementById('result').innerHTML = `あなたのタイプは：<span style="font-size:1.5em">${result.title}</span>`;
+        document.getElementById('result').innerHTML = `あなたは：<span style="font-size:1.5em">${result.title}</span>`;
         document.getElementById('advice').innerHTML = '<ul>' + result.advice.map(a => `<li>${a}</li>`).join('') + '</ul>';
       }
     }
