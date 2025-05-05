@@ -34,10 +34,17 @@
     .no {
       background-color: #AED581;
     }
+    #result, #advice {
+      display: none;
+    }
+    #result.show, #advice.show {
+      display: block;
+    }
     #result {
       margin-top: 40px;
       font-size: 1.4em;
       font-weight: bold;
+      color: #66BB6A;
     }
     #advice {
       margin-top: 20px;
@@ -50,6 +57,19 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #progress {
+      width: 100%;
+      background-color: #eee;
+      height: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: #FFB74D;
+      border-radius: 10px;
     }
     footer {
       margin-top: 60px;
@@ -66,6 +86,7 @@
   自分にぴったりのセルフケアが見つかる48問の診断です。</p>
 
   <div id="quiz">
+    <div id="progress"><div id="progress-bar"></div></div>
     <div class="question" id="question"></div>
     <button class="button yes" onclick="answer('yes')">YES</button>
     <button class="button no" onclick="answer('no')">NO</button>
@@ -80,165 +101,98 @@
     無断転載・商用利用・改変を禁じます。</p>
   </footer>
 
-<script>
-const questions = [
-  // Enneagram Type 1
-  "決めたことはきちんとやり遂げたいと思う",
-  "人から真面目だと言われることが多い",
-  "理想と現実のギャップにモヤモヤする",
-  "正義感が強くて納得できないことに怒りを感じる",
-  // Type 2
-  "誰かの役に立てると嬉しい",
-  "つい人を優先してしまう",
-  "頼られると張り切ってしまう",
-  "感謝されるとやりがいを感じる",
-  // Type 3
-  "効率や成果を意識するタイプだ",
-  "褒められるとモチベーションが上がる",
-  "目標があると頑張れる",
-  "忙しくしている方が落ち着く",
-  // Type 4
-  "感受性が豊かだとよく言われる",
-  "人と違う自分らしさを大切にしたい",
-  "気分にムラがあると感じる",
-  "自分の内面を見つめる時間が必要だ",
-  // Type 5
-  "一人の時間がないと疲れる",
-  "情報を集めて分析するのが好きだ",
-  "あまり感情を表に出さない",
-  "静かな環境の方が落ち着く",
-  // Type 6
-  "慎重にリスクを考えて行動する方だ",
-  "信頼できる人に相談することが多い",
-  "急な変化が苦手だ",
-  "不安を感じやすい",
-  // Type 7
-  "楽しいことを考えると元気が出る",
-  "新しいことにチャレンジするのが好きだ",
-  "じっとしているのが苦手だ",
-  "ワクワクする予定があると頑張れる",
-  // Type 8
-  "エネルギッシュだと言われる",
-  "はっきりものを言うタイプだ",
-  "リーダーシップを取ることが多い",
-  "弱みを見せるのが苦手だ",
-  // Type 9
-  "平和に過ごしたいと願っている",
-  "人の意見に合わせがちだ",
-  "衝突を避けたいと思う",
-  "のんびり過ごすのが好きだ",
-  // V: Visual
-  "美しいものを見て癒される",
-  "空や光などの景色に心が整う",
-  "ToDoやスケジュールを見える化すると安心する",
-  "色彩や明るさに敏感だ",
-  // A: Auditory
-  "音楽を聴くと気分が変わる",
-  "やさしい声や語り口に安心する",
-  "自分にかける言葉でやる気が変わる",
-  "静かな場所にいると落ち着く",
-  // K: Kinesthetic
-  "ぬくもりや触感で安心する",
-  "深呼吸すると気持ちが整う",
-  "ストレッチや運動で気分転換している",
-  "香りや肌ざわりが気になる"
-];
+  <script>
+    const questions = [
+      // Type 1–9 (各タイプ4問ずつ)
+      "決めたことはきちんとやり遂げたいと思う",
+      "人から真面目だと言われることが多い",
+      "理想と現実のギャップにモヤモヤする",
+      "正義感が強くて納得できないことに怒りを感じる",
+      "誰かの役に立てると嬉しい",
+      "つい人を優先してしまう",
+      "頼られると張り切ってしまう",
+      "感謝されるとやりがいを感じる",
+      "効率や成果を意識するタイプだ",
+      "褒められるとモチベーションが上がる",
+      "目標があると頑張れる",
+      "忙しくしている方が落ち着く",
+      "感受性が豊かだとよく言われる",
+      "人と違う自分らしさを大切にしたい",
+      "気分にムラがあると感じる",
+      "自分の内面を見つめる時間が必要だ",
+      "一人の時間がないと疲れる",
+      "情報を集めて分析するのが好きだ",
+      "あまり感情を表に出さない",
+      "静かな環境の方が落ち着く",
+      "慎重にリスクを考えて行動する方だ",
+      "信頼できる人に相談することが多い",
+      "急な変化が苦手だ",
+      "不安を感じやすい",
+      "楽しいことを考えると元気が出る",
+      "新しいことにチャレンジするのが好きだ",
+      "じっとしているのが苦手だ",
+      "ワクワクする予定があると頑張れる",
+      "エネルギッシュだと言われる",
+      "はっきりものを言うタイプだ",
+      "リーダーシップを取ることが多い",
+      "弱みを見せるのが苦手だ",
+      "平和に過ごしたいと願っている",
+      "人の意見に合わせがちだ",
+      "衝突を避けたいと思う",
+      "のんびり過ごすのが好きだ",
+      // VAK (各4問)
+      "美しいものを見て癒される",
+      "空や光などの景色に心が整う",
+      "ToDoやスケジュールを見える化すると安心する",
+      "色彩や明るさに敏感だ",
+      "音楽を聴くと気分が変わる",
+      "やさしい声や語り口に安心する",
+      "自分にかける言葉でやる気が変わる",
+      "静かな場所にいると落ち着く",
+      "ぬくもりや触感で安心する",
+      "深呼吸すると気持ちが整う",
+      "ストレッチや運動で気分転換している",
+      "香りや肌ざわりが気になる"
+    ];
 
-let currentIndex = 0;
-let answers = [];
-questions.sort(() => Math.random() - 0.5);
-const questionDiv = document.getElementById("question");
-const resultDiv = document.getElementById("result");
-
-function showQuestion() {
-  if (currentIndex < questions.length) {
-    questionDiv.textContent = (currentIndex + 1) + ". " + questions[currentIndex];
-  } else {
-    document.querySelector(".yes").style.display = "none";
-    document.querySelector(".no").style.display = "none";
-    questionDiv.style.display = "none";
-    calculateResult();
-  }
-}
-
-function answer(choice) {
-  answers.push({ index: currentIndex, value: choice });
-  currentIndex++;
-  showQuestion();
-}
-
-function calculateResult() {
-  const enneagramScores = Array(9).fill(0);
-  const vakScores = [0, 0, 0];
-  for (const ans of answers) {
-    if (ans.value === 'yes') {
-      if (ans.index < 36) {
-        const type = Math.floor(ans.index / 4);
-        enneagramScores[type]++;
-      } else {
-        const vakType = Math.floor((ans.index - 36) / 4);
-        vakScores[vakType]++;
-      }
-    }
-  }
-  const enneagramMax = enneagramScores.indexOf(Math.max(...enneagramScores));
-  const vakMax = vakScores.indexOf(Math.max(...vakScores));
-
-  const vakNames = [
-    "👀視覚で癒される人",
-    "🎧聴覚で癒される人",
-    "🤸‍♀️身体感覚で癒される人"
-  ];
-
-  const results = [
-      { title: "整った空間で安心する人", advice: ["🧹 デスクや部屋の片づけ", "🌿 シンプルなインテリアに整える", "🌞 朝にカーテンを開けて光を入れる"] },
-      { title: "美しいものに心がときめく人", advice: ["💐 季節の花を飾る", "🎨 美術館・雑貨屋に行く", "🖼 お気に入りのアートを見る"] },
-      { title: "目標を見える化すると落ち着く人", advice: ["🗓 手帳に予定を整理", "🧾 目標ボードや付箋で可視化", "🔖 色分けで優先順位管理"] },
-      { title: "色や光で気分が整う人", advice: ["☀️ 朝日を浴びる", "🧣 カラフルな服や小物を取り入れる", "💡 間接照明で空間を整える"] },
-      { title: "静かな景色で思考が深まる人", advice: ["🏞 湖や海辺で散歩", "📖 景色のいい場所で読書", "☁️ 雲や空を眺める"] },
-      { title: "見通しがあると安心する人", advice: ["🗺 週間プランを見直す", "📅 Googleカレンダーで管理", "🧠 マインドマップで整理"] },
-      { title: "カラフルな世界で気分が上がる人", advice: ["🖍 カラフルな文房具", "🌈 POPなコーデを楽しむ", "📸 カフェや街並みを写真に撮る"] },
-      { title: "未来を描くことで落ち着く人", advice: ["🖌 ビジョンボードを作る", "📔 夢ノートにイラストを書く", "🎯 目標を絵で表現"] },
-      { title: "やさしい風景に心がほぐれる人", advice: ["🌆 夕暮れの散歩", "🌿 木漏れ日の縁側で休む", "🏡 ナチュラルな部屋づくり"] },
-      { title: "静かな音で整う人", advice: ["🌊 自然音を流す", "☕️ 静かなカフェで過ごす", "🔇 耳栓で静かな時間"] },
-      { title: "やさしい声に安心する人", advice: ["🎧 癒し系ポッドキャスト", "🗣 朗読や声優ボイス", "🫶 自分にやさしく語りかける"] },
-      { title: "応援の言葉でやる気が出る人", advice: ["💬 アファメーション", "📱 励ましの音声を聴く", "📝 励ましの言葉を音読"] },
-      { title: "お気に入りの音楽で気分が変わる人", advice: ["🎵 プレイリストを作る", "🌅 朝に音楽を流す", "🚗 ドライブ中にBGM"] },
-      { title: "言葉で整理されると落ち着く人", advice: ["🎙 音声日記を録音", "🗯 思考を声に出す", "🧩 自問自答する"] },
-      { title: "声かけで不安がほぐれる人", advice: ["📞 電話で話す", "🫂 『大丈夫』と声をかける", "🔁 安心の言葉を繰り返し聴く"] },
-      { title: "リズムに乗ると元気になる人", advice: ["🕺 リズム体操", "🥁 ストンプ遊び", "🧹 家事にBGM"] },
-      { title: "はっきり伝えることでスッキリする人", advice: ["🗣 思ったことを言語化", "🎤 声に出す練習", "👥 本音を話せる人と対話"] },
-      { title: "やわらかな音に癒される人", advice: ["🔔 風鈴や小川の音", "🎶 Lofiヒーリング", "🧸 クッションで音を和らげる"] },
-      { title: "体を整えると心も整う人", advice: ["🤸‍♂️ 朝のストレッチ", "🪑 姿勢を整える", "💆‍♀️ マッサージを受ける"] },
-      { title: "ぬくもりにふれると安心する人", advice: ["🛌 湯たんぽやブランケット", "🤗 ハグや手をつなぐ", "☕️ あたたかい飲み物を包む"] },
-      { title: "動くことでモヤモヤが消える人", advice: ["🚶‍♀️ ウォーキング", "🧹 掃除で動く", "🏋️‍♂️ 運動系YouTube"] },
-      { title: "肌ざわりや香りで心が落ち着く人", advice: ["🧴 アロマ・香水", "🛏 肌ざわりのよい寝具", "🧸 柔らかいぬいぐるみ"] },
-      { title: "深呼吸で頭がクリアになる人", advice: ["🌬 ボックス呼吸", "🫧 シャボン玉呼吸", "🪟 窓を開けて深呼吸"] },
-      { title: "ルーティンで安心できる人", advice: ["📅 朝ルーティンをつくる", "🔁 同じ香りや音で始める", "🧘‍♂️ 手帳・体操・瞑想の順"] },
-      { title: "体験を通して元気になる人", advice: ["☕️ 新しいカフェに行く", "🍳 料理やDIY", "🌿 五感で楽しむ体験"] },
-      { title: "パワフルに動くとリセットできる人", advice: ["💪 筋トレ", "🚵‍♂️ アウトドア活動", "🧼 汗をかく掃除"] },
-      { title: "ゆっくり触れるとリラックスできる人", advice: ["🙌 顔や手のマッサージ", "🧣 布でやさしく触れる", "🐕 ペットに触れる"] }
+    const results = [
+      { title: "👀視覚×Type1｜整った空間で安心する人", advice: ["🧹 デスクや部屋の片づけ", "🌿 シンプルなインテリアに整える", "🌞 朝にカーテンを開けて光を入れる"] },
+      { title: "👀視覚×Type2｜美しいものに心がときめく人", advice: ["💐 季節の花を飾る", "🎨 美術館・雑貨屋に行く", "🖼 お気に入りのアートを見る"] },
+      { title: "👀視覚×Type3｜目標を見える化すると落ち着く人", advice: ["🗓 手帳に予定を整理", "🧾 目標ボードや付箋で可視化", "🔖 色分けで優先順位管理"] },
+      { title: "🎧聴覚×Type1｜静かな音で整う人", advice: ["🌊 自然音を流す", "☕️ 静かなカフェで過ごす", "🔇 耳栓で静かな時間"] },
+      { title: "🎧聴覚×Type2｜やさしい声に安心する人", advice: ["🎧 癒し系ポッドキャスト", "🗣 朗読や声優ボイス", "🫶 自分にやさしく語りかける"] },
+      { title: "🎧聴覚×Type3｜お気に入りの音楽で気分が変わる人", advice: ["🎵 プレイリストを作る", "🌅 朝に音楽を流す", "🚗 ドライブ中にBGM"] },
+      { title: "🤸‍♀️身体感覚×Type1｜体を整えると心も整う人", advice: ["🤸‍♂️ 朝のストレッチ", "🪑 姿勢を整える", "💆‍♀️ マッサージを受ける"] },
+      { title: "🤸‍♀️身体感覚×Type2｜ぬくもりにふれると安心する人", advice: ["🛌 湯たんぽやブランケット", "🤗 ハグや手をつなぐ", "☕️ あたたかい飲み物を包む"] },
+      { title: "🤸‍♀️身体感覚×Type3｜動くことでモヤモヤが消える人", advice: ["🚶‍♀️ ウォーキング", "🧹 掃除で動く", "🏋️‍♂️ 運動系YouTube"] }
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
-    const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5);
+    const shuffledQuestions = [...questions];
 
     function answer(choice) {
       if (choice === 'yes') score++;
       currentQuestionIndex++;
 
+      const progressPercent = Math.floor((currentQuestionIndex / shuffledQuestions.length) * 100);
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
       if (currentQuestionIndex < shuffledQuestions.length) {
-        document.getElementById('question').textContent = shuffledQuestions[currentQuestionIndex];
+        document.getElementById('question').textContent = `${currentQuestionIndex + 1}. ${shuffledQuestions[currentQuestionIndex]}`;
       } else {
         const result = results[score % results.length];
         document.getElementById('quiz').style.display = 'none';
-        document.getElementById('result').textContent = `あなたのタイプは：「${result.title}」`;
+        document.getElementById('result').classList.add('show');
+        document.getElementById('advice').classList.add('show');
+        document.getElementById('result').innerHTML = `あなたのタイプは：<span style="font-size:1.5em">${result.title}</span>`;
         document.getElementById('advice').innerHTML = '<ul>' + result.advice.map(a => `<li>${a}</li>`).join('') + '</ul>';
       }
     }
 
-    document.getElementById('question').textContent = shuffledQuestions[currentQuestionIndex];
+    document.getElementById('question').textContent = `1. ${shuffledQuestions[currentQuestionIndex]}`;
+    document.getElementById('progress-bar').style.width = `0%`;
   </script>
 </body>
 </html>
+
